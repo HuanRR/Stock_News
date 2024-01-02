@@ -1,4 +1,5 @@
 import requests
+import json
 from twilio.rest import Client
 
 VIRTUAL_TWILIO_NUMBER = "your virtual twilio number"
@@ -12,8 +13,8 @@ NEWS_ENDPOINT = "https://newsapi.org/v2/everything"
 
 STOCK_API_KEY = "4NWUOJHSC8ANDD1N"
 NEWS_API_KEY = "5ac4c15cdd6e450eab0a2dbb7eb8e64b"
-TWILIO_SID = "ACf019872ffcb063e1d13dbbb0cf5a3b18"
-TWILIO_AUTH_TOKEN = "c34bf7d9fc5fbe13945a8c91080d8123"
+# TWILIO_SID = "ACf019872ffcb063e1d13dbbb0cf5a3b18"
+# TWILIO_AUTH_TOKEN = "c34bf7d9fc5fbe13945a8c91080d8123"
 
 ## STEP 1: Use https://www.alphavantage.co/documentation/#daily
 # When stock price increase/decreases by 5% between yesterday and the day before yesterday then print("Get News").
@@ -54,7 +55,7 @@ print(diff_percent)
 
 #Instead of printing ("Get News"), use the News API to get articles related to the COMPANY_NAME.
 #If difference percentage is greater than 5 then print("Get News").
-if abs(diff_percent) > 1:
+if abs(diff_percent) > 0.5:
     news_params = {
         "apiKey": NEWS_API_KEY,
         "qInTitle": COMPANY_NAME,
@@ -71,9 +72,13 @@ if abs(diff_percent) > 1:
 
     #Create a new list of the first 3 article's headline and description using list comprehension.
     formatted_articles = [f"{STOCK_NAME}: {up_down}{diff_percent}%\nHeadline: {article['title']}. \nBrief: {article['description']}" for article in three_articles]
-    print(formatted_articles)
+    # print(formatted_articles)
+
+    pretty_news = json.dumps(formatted_articles, indent=4)
+    print(pretty_news)
+
     #Send each article as a separate message via Twilio.
-    client = Client(TWILIO_SID, TWILIO_AUTH_TOKEN)
+    # client = Client(TWILIO_SID, TWILIO_AUTH_TOKEN)
 
     #TODO 8. - Send each article as a separate message via Twilio.
     # for article in formatted_articles:
